@@ -1,4 +1,4 @@
-# Stampede API
+# Stampede Join API
 
 ## Project Structure
 The repo was built by the general API file structure conventions we user at DEV.  It implements JWT-based authentication, with a basic user model and typedef.  It has a full devloper environment with prettier/eslint/travis set up.
