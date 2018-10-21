@@ -1,20 +1,5 @@
 # Stampede API
 
-## Starting a New Project
-
-**NOTE: Delete this section in the README once you have started the new project**
-
-Run these commands to start a new project built off of this repository.
-
-```bash
-$ git clone https://github.com/hsadev/gql-api-starter.git <YOUR_PROJECT_NAME> && cd <YOUR_PROJECT_NAME> # clone repo 
-$ rm -rf .git # delete original git history
-$ git init # create new git repository
-$ git remote add origin <YOUR_PROJECT_GIT_REPOSITORY> # add remote for github repo
-```
-
-Finally go into `config/index.js` and update the relevant information for your project
-
 ## Project Structure
 The repo was built by the general API file structure conventions we user at DEV.  It implements JWT-based authentication, with a basic user model and typedef.  It has a full devloper environment with prettier/eslint/travis set up.
 
