@@ -24,8 +24,7 @@ module.exports = function defineUser(sequelize, DataTypes) {
     },
     signUpReferralCode: {
       type: DataTypes.STRING,
-      allowNull: false,
-    }
+    },
   })
 
   return User

@@ -11,5 +11,19 @@ module.exports = gql`
     referralCode: String!
     signUpReferralCode: String
   }
-  type Mutstion
+  type Mutation {
+    createUser(createUserInput: CreateUserInput!): UserReturn
+  }
+  input CreateUserInput {
+    name: String!
+    email: String!
+    signUpReferralCode: String
+  }
+  type UserReturn {
+    user: User
+    error: Error
+  }
+  type Error {
+    message: String
+  }
 `

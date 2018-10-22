@@ -1,19 +1,23 @@
-const { User } = require('../../models')
+const { User } = require('../../../models')
 
 const makeCode = () => {
-  if (localStorage.id) return localStorage.id
   let text = ''
   const possible =
     'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
 
   for (let i = 0; i < 5; i += 1)
     text += possible.charAt(Math.floor(Math.random() * possible.length))
-  localStorage.id = text
   return text
 }
 
 const createUser = async function createUser(obj, { createUserInput }) {
-  const newUser = await User.build({ code: makeCode(), ...createUserInput })
+  const user = await User.find({ where: { email: createUserInput.email } })
+  if (user) return { user, error: null }
+
+  const newUser = await User.build({
+    ...createUserInput,
+    referralCode: makeCode(),
+  })
   if (!newUser) {
     return {
       error: {
@@ -22,20 +26,11 @@ const createUser = async function createUser(obj, { createUserInput }) {
     }
   }
 
-  const hash = bcrypt.hashSync(
-    createUserInput.password,
-    config.server.saltRounds,
-  )
-  newUser.password = hash
-
   return newUser
     .save()
     .then(user => {
-      const payload = { id: user.id }
-      const token = jwt.sign(payload, config.server.tokenSecret)
       return {
         user,
-        token,
         error: null,
       }
     })
@@ -46,7 +41,7 @@ const createUser = async function createUser(obj, { createUserInput }) {
       }
       return {
         error: {
-          message,
+          message: message || err.message,
         },
       }
     })
@@ -55,7 +50,7 @@ const createUser = async function createUser(obj, { createUserInput }) {
 const resolver = {
   Mutation: {
     createUser,
-  }
+  },
 }
 
 module.exports = resolver

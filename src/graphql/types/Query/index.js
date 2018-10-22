@@ -1,7 +1,5 @@
 const merge = require('lodash.merge')
 
-const investment = require('./investment')
-
-const resolvers = [investment]
+const resolvers = []
 
 module.exports = merge(...resolvers)
