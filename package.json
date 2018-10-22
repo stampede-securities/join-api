@@ -24,7 +24,8 @@
   "scripts": {
     "js-lint": "eslint \"src/**/*.js\" \"public/**/*.js\"",
     "lint": "npm run js-lint",
-    "start": "nodemon index.js",
+    "start": "node index.js",
+    "dev": "nodemon index.js",
     "db": "psql -U admin postgres",
     "reset": "node index.js --force",
     "db-install": "brew install postgres",
