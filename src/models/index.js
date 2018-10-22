@@ -4,7 +4,7 @@ const path = require('path')
 
 const basename = path.basename(module.filename)
 const env = process.env.NODE_ENV || 'development'
-const config = require('../../config').db[env]
+const config = require('../../config').db.development
 
 const sequelize = new Sequelize(
   config.database,
@@ -18,7 +18,7 @@ fs.readdirSync(__dirname)
   .filter(
     file =>
       file.indexOf('.') !== 0 && file !== basename && file.slice(-3) === '.js',
-)
+  )
   .forEach(file => {
     const model = sequelize.import(path.join(__dirname, file))
     db[model.name] = model
