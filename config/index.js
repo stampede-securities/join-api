@@ -12,5 +12,8 @@ module.exports = {
       dialect: 'postgres',
       secret: process.env.SECRET || 'thisisthesecret',
     },
+    production: {
+      databaseURL: process.env.DATABASE_URL,
+    },
   },
 }

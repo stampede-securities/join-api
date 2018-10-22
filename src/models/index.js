@@ -4,14 +4,22 @@ const path = require('path')
 
 const basename = path.basename(module.filename)
 const env = process.env.NODE_ENV || 'development'
-const config = require('../../config').db.development
+const configdb = require('../../config').db[env]
 
-const sequelize = new Sequelize(
-  config.database,
-  config.username,
-  config.password,
-  config,
-)
+let sequelize
+
+if (env === 'development') {
+  console.log('in development/models.js')
+  sequelize = new Sequelize(
+    configdb.database,
+    configdb.username,
+    configdb.password,
+    configdb,
+  )
+} else {
+  console.log('initalized developpment db', configdb.databaseURL)
+  sequelize = new Sequelize(configdb.databaseURL)
+}
 
 const db = {}
 fs.readdirSync(__dirname)
