@@ -1,16 +1,19 @@
 const express = require('express')
+const path = require('path')
+const logger = require('morgan')
+const cookieParser = require('cookie-parser')
 const bodyParser = require('body-parser')
-const jwt = require('jsonwebtoken')
-const { graphqlExpress, graphiqlExpress } = require('apollo-server-express')
-const { createServer } = require('http')
 
-const models = require('./src/models')
-const schema = require('./src/graphql')
+const models = require('./models')
 const config = require('./config')
-
-const force = process.argv[2] === '--force'
+const routes = require('./routes')
 
 const app = express()
+
+// run init script
+if (app.get('env') === 'production') require('./init/init')
+// log if in dev mode
+else app.use(logger('dev'))
 
 // Middleware to handle CORS
 app.use((req, res, next) => {
@@ -22,14 +25,14 @@ app.use((req, res, next) => {
   if (req.headers['access-control-request-method']) {
     res.header(
       'Access-Control-Allow-Methods',
-      req.headers['access-control-request-method'],
+      req.headers['access-control-request-method']
     )
     oneof = true
   }
   if (req.headers['access-control-request-headers']) {
     res.header(
       'Access-Control-Allow-Headers',
-      req.headers['access-control-request-headers'],
+      req.headers['access-control-request-headers']
     )
     oneof = true
   }
@@ -42,40 +45,39 @@ app.use((req, res, next) => {
   return next()
 })
 
+// app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')))
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }))
-app.use(
-  '/graphql',
-  bodyParser.json(),
-  graphqlExpress(async req => {
-    const token = req.headers.authorization
-    if (token) {
-      const decoded = jwt.verify(token, config.tokenSecret)
-      const user = await models.User.findById(decoded.id)
-      return {
-        schema,
-        context: {
-          user,
-        },
-      }
-    }
-    return {
-      schema,
-    }
-  }),
-)
-app.use(
-  '/graphiql',
-  graphiqlExpress({
-    endpointURL: '/graphql',
-  })
-)
+app.use(cookieParser())
+app.use(express.static(path.join(__dirname, 'public')))
 
-models.sequelize.sync({ force }).then(() => {
-  const server = createServer(app)
-  server.listen(config.port, () => {
-    console.log(
-      `Apollo Server is now running on http://localhost:${config.port}`,
-    )
+app.use('/', routes)
+
+// handle 404
+app.use((req, res, next) => {
+  const err = new Error('Not Found')
+  err.status = 404
+  next(err)
+})
+
+// development error handler
+if (app.get('env') === 'development') {
+  app.use((err, req, res, next) => {
+    console.error(err)
+    res.status(err.status || 500).send()
   })
+}
+
+// production error handler
+app.use((err, req, res, next) => {
+  res.status(err.status || 500).send()
+})
+
+models.sequelize.sync().then(() => {
+  const server = app.listen(config.port)
+  console.log(
+    'Listening at http://localhost:%s in %s mode',
+    server.address().port,
+    app.get('env')
+  )
 })

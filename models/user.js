@@ -17,13 +17,9 @@ module.exports = function defineUser(sequelize, DataTypes) {
         isEmail: true,
       },
     },
-    referralCode: {
+    signUpRefCode: {
       type: DataTypes.STRING,
       allowNull: false,
-      unique: true,
-    },
-    signUpReferralCode: {
-      type: DataTypes.STRING,
     },
   })
 
