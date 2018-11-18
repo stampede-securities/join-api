@@ -11,9 +11,7 @@ const routes = require('./routes')
 const app = express()
 
 // run init script
-if (app.get('env') === 'production') require('./init/init')
-// log if in dev mode
-else app.use(logger('dev'))
+if (app.get('env') !== 'production') app.use(logger('dev'))
 
 // Middleware to handle CORS
 app.use((req, res, next) => {
@@ -25,14 +23,14 @@ app.use((req, res, next) => {
   if (req.headers['access-control-request-method']) {
     res.header(
       'Access-Control-Allow-Methods',
-      req.headers['access-control-request-method']
+      req.headers['access-control-request-method'],
     )
     oneof = true
   }
   if (req.headers['access-control-request-headers']) {
     res.header(
       'Access-Control-Allow-Headers',
-      req.headers['access-control-request-headers']
+      req.headers['access-control-request-headers'],
     )
     oneof = true
   }
@@ -78,6 +76,6 @@ models.sequelize.sync().then(() => {
   console.log(
     'Listening at http://localhost:%s in %s mode',
     server.address().port,
-    app.get('env')
+    app.get('env'),
   )
 })
