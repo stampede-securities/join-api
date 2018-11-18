@@ -1,7 +1,7 @@
 const auth = require('../controllers/auth')
 const employees = require('../controllers/employees')
-const users = require('../controllers/users')
 const express = require('express')
+const users = require('../controllers/users')
 
 const router = express.Router()
 
