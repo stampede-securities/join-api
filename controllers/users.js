@@ -1,6 +1,8 @@
 const { User } = require('../models')
 const errors = require('../errors')
-const sg = require('sendgrid')(process.env.SENDGRID_API_KEY)
+const sgMail = require('@sendgrid/mail')
+
+sgMail.setApiKey(process.env.SENDGRID_API_KEY)
 
 exports.createUser = async (req, res, next) => {
   const validationError = errors.missingFields(req.body, ['name', 'email'])
@@ -11,35 +13,15 @@ exports.createUser = async (req, res, next) => {
   }
   try {
     await newUser.save()
-    console.log('ENTERED')
-    const request = sg.emptyRequest({
-      method: 'POST',
-      path: '/v3/mail/send',
-      body: {
-        personalizations: [
-          {
-            to: [
-              {
-                email: 'noah@stampedelive.com',
-              },
-            ],
-            subject: 'Hello World from the SendGrid Node.js Library!',
-          },
-        ],
-        from: {
-          email: 'admin@stampedelive.com',
-        },
-        content: [
-          {
-            type: 'text/plain',
-            value: 'Hello, Email!',
-          },
-        ],
-      },
-    })
+    const msg = {
+      to: 'noah@stampedelive.com',
+      from: 'admin@stampedelive.com.com',
+      subject: 'Sending with SendGrid is Fun',
+      text: 'and easy to do anywhere, even with Node.js',
+      html: '<strong>and easy to do anywhere, even with Node.js</strong>',
+    }
     try {
-      console.log(request)
-      await sg.API(request)
+      await sgMail.send(msg)
     } catch (err) {
       console.error('EMAIL SEND FAILED')
       console.error(err)
