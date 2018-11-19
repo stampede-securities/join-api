@@ -21,6 +21,7 @@ exports.createUser = async (req, res, next) => {
       html: '<strong>and easy to do anywhere, even with Node.js</strong>',
     }
     try {
+      console.log('executing send sgMail', sgMail.send)
       await sgMail.send(msg)
     } catch (err) {
       console.error('EMAIL SEND FAILED')
