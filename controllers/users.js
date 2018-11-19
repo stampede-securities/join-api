@@ -18,13 +18,14 @@ exports.createUser = async (req, res, next) => {
       from: 'Stampede Team<admin@stampedelive.com>',
       subject: 'Thank you from Stampede',
       html: `
-      Hello ${req.body.name},
+      Hello ${req.body.name.split(' ')[0]},
       <br/>
       <p>
       Congratulations on being admitted into the Keros Club.  As a member, you will have early access to deals and content on the platform.  Here is the link to our full website: stampedelive.com.  We’ll be in touch with exclusive access to the first deals we are launching on our platform.  
       </p>
       <br/>
       Thank You,
+      <br/>
       Stampede Team 
       `,
     }
