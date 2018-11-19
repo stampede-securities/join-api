@@ -11,6 +11,7 @@ exports.createUser = async (req, res, next) => {
   }
   try {
     await newUser.save()
+    console.log('ENTERED')
     const request = sg.emptyRequest({
       method: 'POST',
       path: '/v3/mail/send',
