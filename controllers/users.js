@@ -14,11 +14,19 @@ exports.createUser = async (req, res, next) => {
   try {
     await newUser.save()
     const msg = {
-      to: 'noah@stampedelive.com',
-      from: 'admin@stampedelive.com.com',
-      subject: 'Sending with SendGrid is Fun',
-      text: 'and easy to do anywhere, even with Node.js',
-      html: '<strong>and easy to do anywhere, even with Node.js</strong>',
+      to: req.body.email,
+      from: 'Stampede Team<admin@stampedelive.com>',
+      subject: 'Thank you from Stampede',
+      html: `
+      Hello ${req.body.name},
+      <br/>
+      <p>
+      Congratulations on being admitted into the Keros Club.  As a member, you will have early access to deals and content on the platform.  Here is the link to our full website: stampedelive.com.  We’ll be in touch with exclusive access to the first deals we are launching on our platform.  
+      </p>
+      <br/>
+      Thank You,
+      Stampede Team 
+      `,
     }
     try {
       console.log('executing send sgMail', sgMail.send)
