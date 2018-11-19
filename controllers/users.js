@@ -37,6 +37,7 @@ exports.createUser = async (req, res, next) => {
       },
     })
     try {
+      console.log(request)
       await sg.API(request)
     } catch (err) {
       console.error('EMAIL SEND FAILED')
