@@ -15,11 +15,16 @@ router
   .put(auth.validateEmployee, employees.updateEmployee)
   .delete(auth.validateEmployee, employees.deleteEmployee)
 
+router
+  .route('/employees/all')
+  .get(auth.validateEmployee, employees.getAllEmployees)
+
 /*
  * User Routes
  */
 router.route('/users').post(users.createUser)
-router.route('/users/all').get(users.getAllUsers)
+router.route('/users/all').get(auth.validateEmployee, users.getAllUsers)
+router.route('/users/email/:email').get(users.getUserByEmail)
 
 /*
  * Auth Routes
@@ -30,5 +35,4 @@ router
   .post(auth.sendResetToken)
   .put(auth.resetPassword)
 
-// expose routes through router object
 module.exports = router

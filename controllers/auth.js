@@ -14,7 +14,7 @@ exports.loginEmployee = async (req, res, next) => {
       return res
         .status(400)
         .send(
-          errors.makeError(errors.err.OBJECT_NOT_FOUND, { name: 'employee' })
+          errors.makeError(errors.err.OBJECT_NOT_FOUND, { name: 'employee' }),
         )
     }
     const isMatch = await employee.comparePassword(req.body.password)
@@ -32,13 +32,13 @@ exports.loginEmployee = async (req, res, next) => {
     const token = jwt.encode(payload, config.tokenSecret)
     employee.token = token
     await employee.save()
-    return res.json({ token })
+    return res.json({ token, accessLevel: employee.accessLevel })
   } catch (err) {
     return next(err)
   }
 }
 
-async function validateToken(req, res, next, options) {
+async function validateToken(req, res, next) {
   const token =
     req.body.token || req.query.token || req.headers['x-access-token']
 
@@ -50,7 +50,6 @@ async function validateToken(req, res, next, options) {
   } catch (err) {
     return res.status(400).send(errors.makeError(errors.err.INVALID_TOKEN))
   }
-  console.log('DECODED', decoded)
   if (!decoded.id)
     return res.status(400).send(errors.makeError(errors.err.INVALID_TOKEN))
 
@@ -62,9 +61,6 @@ async function validateToken(req, res, next, options) {
     if (token !== employee.token) {
       return res.status(400).send(errors.makeError(errors.err.INVALID_TOKEN))
     }
-    if (options.adminRequired && employee.accessLevel !== 'ADMIN') {
-      return res.status(400).send(errors.makeError(errors.err.NO_USER))
-    }
     req.employee = employee
     req.id = decoded.id
     return next()
@@ -75,10 +71,6 @@ async function validateToken(req, res, next, options) {
 
 exports.validateEmployee = (req, res, next) => {
   validateToken(req, res, next, {})
-}
-
-exports.validateAdmin = (req, res, next) => {
-  validateToken(req, res, next, { adminRequired: true })
 }
 
 exports.changePassword = async (req, res, next) => {
@@ -124,7 +116,7 @@ exports.resetPassword = async (req, res, next) => {
       return res.status(400).send(
         errors.makeError(errors.err.OBJECT_NOT_FOUND, {
           object: ['employee'],
-        })
+        }),
       )
     }
     if (!employee.passwordToken || req.body.token !== employee.passwordToken) {

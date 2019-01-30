@@ -30,9 +30,7 @@
     "db-install": "brew install postgres",
     "db-start": "brew services start postgresql",
     "db-create-user": "createuser -P -s -e admin",
-    "postgis-install": "brew install postgis",
-    "setup": "npm-run-all db-install postgis-install db-start db-create-user",
-    "generate-mock-db-data": "node ./config/generateMockDbData.js"
+    "setup-db": "npm-run-all db-install db-start db-create-user"
   },
   "devDependencies": {
     "eslint": "^4.19.1",

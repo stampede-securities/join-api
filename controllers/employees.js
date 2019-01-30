@@ -1,27 +1,16 @@
-const { Employee } = require('../models/')
+const { Employee, User } = require('../models/')
 const config = require('../config')
 const jwt = require('jwt-simple')
 const errors = require('../errors.js')
-
-const makeCode = () => {
-  let text = ''
-  const possible =
-    'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
-
-  for (let i = 0; i < 5; i += 1)
-    text += possible.charAt(Math.floor(Math.random() * possible.length))
-  return text
-}
 
 exports.createEmployee = async (req, res) => {
   const validationError = errors.missingFields(req.body, [
     'hash',
     'name',
     'email',
-    'accessLevel',
   ])
   if (validationError) return res.status(400).send(validationError)
-  const newEmployee = await Employee.build({ ...req.body, refCode: makeCode() })
+  const newEmployee = await Employee.build(req.body)
   if (!newEmployee) {
     return res.status(400).send('Could not create employee')
   }
@@ -45,7 +34,7 @@ exports.createEmployee = async (req, res) => {
 
 exports.getAllEmployees = async (_, res, next) => {
   try {
-    const employees = await Employee.find({})
+    const employees = await Employee.findAll({})
     return res.json(employees)
   } catch (err) {
     return next(err)

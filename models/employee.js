@@ -8,10 +8,6 @@ module.exports = function defineEmployee(sequelize, DataTypes) {
       defaultValue: DataTypes.UUIDV4,
       primaryKey: true,
     },
-    refCode: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
     name: {
       type: DataTypes.STRING,
       allowNull: false,
@@ -30,10 +26,6 @@ module.exports = function defineEmployee(sequelize, DataTypes) {
     },
     token: {
       type: DataTypes.STRING,
-    },
-    accessLevel: {
-      type: DataTypes.ENUM,
-      values: ['SALES', 'ADMIN'],
     },
   })
 

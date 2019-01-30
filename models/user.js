@@ -17,6 +17,14 @@ module.exports = function defineUser(sequelize, DataTypes) {
         isEmail: true,
       },
     },
+    refCode: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    createdAccount: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+    },
     signUpRefCode: {
       type: DataTypes.STRING,
       allowNull: false,
